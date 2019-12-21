@@ -50,7 +50,6 @@ class Base64Converter {
             }
             print(result)
         }
-    }
     
     func convert(_ str: String, fromRadix r1: Int, toRadix r2: Int) -> String? {
         if let num = Int(str, radix: r1) {
@@ -67,3 +66,4 @@ class Base64Converter {
         }
         return padded
     }
+}
