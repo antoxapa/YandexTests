@@ -1,0 +1,69 @@
+import UIKit
+class Base64Converter {
+    
+    func convertToBase64(inputStringLength: String, inputString: String)  {
+        var inputStringLengthInt = Int(inputStringLength)!
+        
+        var hexadecimalArray = inputString.components(separatedBy: .whitespaces)
+        
+        while inputStringLengthInt % 3 != 0 {
+            inputStringLengthInt += 1
+            hexadecimalArray.append("00")
+        }
+            var sevenBitArray: [String] = []
+            for hexNumber in hexadecimalArray {
+                let binary = convert("\(hexNumber)", fromRadix: 16, toRadix: 2)
+                sevenBitArray.append(binary!)
+            }
+            var eightBitString = ""
+            for itemtopad in sevenBitArray {
+                let padded = pad(string: itemtopad, toSize: 8)
+                eightBitString += "\(padded)"
+            }
+            var stringCount = eightBitString.count
+            
+            while stringCount != 6 {
+                if stringCount % 6 == 0 {
+                    stringCount -= 6
+                    eightBitString.insert(" ", at: eightBitString.index(eightBitString.startIndex, offsetBy: stringCount))
+                } else {
+                    print("error")
+                }
+            }
+            let binaryArray = eightBitString.components(separatedBy: " ")
+            var decimalArray: [String] = []
+            for decValue in binaryArray {
+                let decimal = convert(decValue, fromRadix: 2, toRadix: 10)
+                decimalArray.append(decimal!)
+            }
+            let base64Symbols = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
+            var result = ""
+            for item in decimalArray {
+                if item == "0" {
+                    result += "="
+                    
+                } else {
+                    let index = base64Symbols.index(base64Symbols.startIndex, offsetBy: Int(item)!)
+                    
+                    result += "\(base64Symbols[index])"
+                }
+            }
+            print(result)
+        }
+    }
+    
+    func convert(_ str: String, fromRadix r1: Int, toRadix r2: Int) -> String? {
+        if let num = Int(str, radix: r1) {
+            return String(num, radix: r2)
+        } else {
+            return nil
+        }
+    }
+    
+    func pad(string : String, toSize: Int) -> String {
+        var padded = string
+        for _ in 0..<(toSize - string.count) {
+            padded = "0" + padded
+        }
+        return padded
+    }
